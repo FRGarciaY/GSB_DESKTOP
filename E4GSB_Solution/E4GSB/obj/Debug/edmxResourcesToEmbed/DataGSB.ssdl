@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="gsbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="famille">
+    <Key>
+      <PropertyRef Name="id_famille" />
+    </Key>
+    <Property Name="id_famille" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="lib_famille" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="medicament">
+    <Key>
+      <PropertyRef Name="id_medicament" />
+    </Key>
+    <Property Name="id_medicament" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_famille" Type="int" />
+    <Property Name="depot_legal" Type="varchar" MaxLength="100" />
+    <Property Name="nom_commercial" Type="varchar" MaxLength="100" />
+    <Property Name="effets" Type="varchar" MaxLength="512" />
+    <Property Name="contre_indication" Type="char" MaxLength="255" />
+    <Property Name="prix_echantillon" Type="decimal" Precision="11" Scale="2" />
+  </EntityType>
+  <EntityType Name="offrir">
+    <Key>
+      <PropertyRef Name="id_medicament" />
+      <PropertyRef Name="id_rapport" />
+    </Key>
+    <Property Name="id_medicament" Type="int" Nullable="false" />
+    <Property Name="id_rapport" Type="int" Nullable="false" />
+    <Property Name="id_visiteur" Type="int" Nullable="false" />
+    <Property Name="qte_offerte" Type="int" />
+  </EntityType>
+  <EntityType Name="praticien">
+    <Key>
+      <PropertyRef Name="id_praticien" />
+    </Key>
+    <Property Name="id_praticien" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_type_praticien" Type="int" />
+    <Property Name="nom_praticien" Type="varchar" MaxLength="100" />
+    <Property Name="prenom_praticien" Type="varchar" MaxLength="100" />
+    <Property Name="adresse_praticien" Type="varchar" MaxLength="200" />
+    <Property Name="cp_praticien" Type="char" MaxLength="5" />
+    <Property Name="ville_praticien" Type="varchar" MaxLength="100" />
+    <Property Name="coef_notoriete" Type="decimal" Precision="11" Scale="2" />
+  </EntityType>
+  <EntityType Name="rapport_visite">
+    <Key>
+      <PropertyRef Name="id_rapport" />
+    </Key>
+    <Property Name="id_rapport" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_praticien" Type="int" />
+    <Property Name="id_visiteur" Type="int" Nullable="false" />
+    <Property Name="date_rapport" Type="date" />
+    <Property Name="bilan" Type="varchar" MaxLength="512" />
+    <Property Name="motif" Type="varchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="visiteur">
+    <Key>
+      <PropertyRef Name="id_visiteur" />
+    </Key>
+    <Property Name="id_visiteur" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_laboratoire" Type="int" />
+    <Property Name="id_secteur" Type="int" />
+    <Property Name="nom_visiteur" Type="varchar" MaxLength="100" />
+    <Property Name="prenom_visiteur" Type="varchar" MaxLength="100" />
+    <Property Name="adresse_visiteur" Type="varchar" MaxLength="200" />
+    <Property Name="cp_visiteur" Type="char" MaxLength="5" />
+    <Property Name="ville_visiteur" Type="varchar" MaxLength="100" />
+    <Property Name="date_embauche" Type="date" />
+    <Property Name="login_visiteur" Type="varchar" MaxLength="50" />
+    <Property Name="pwd_visiteur" Type="varchar" MaxLength="200" />
+    <Property Name="type_visiteur" Type="char" MaxLength="1" />
+  </EntityType>
+  <Association Name="FK_medicament__id_famille">
+    <End Role="famille" Type="Self.famille" Multiplicity="0..1" />
+    <End Role="medicament" Type="Self.medicament" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="famille">
+        <PropertyRef Name="id_famille" />
+      </Principal>
+      <Dependent Role="medicament">
+        <PropertyRef Name="id_famille" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_offrir__id_medicament">
+    <End Role="medicament" Type="Self.medicament" Multiplicity="1" />
+    <End Role="offrir" Type="Self.offrir" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="medicament">
+        <PropertyRef Name="id_medicament" />
+      </Principal>
+      <Dependent Role="offrir">
+        <PropertyRef Name="id_medicament" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_offrir__id_rapport">
+    <End Role="rapport_visite" Type="Self.rapport_visite" Multiplicity="1" />
+    <End Role="offrir" Type="Self.offrir" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="rapport_visite">
+        <PropertyRef Name="id_rapport" />
+      </Principal>
+      <Dependent Role="offrir">
+        <PropertyRef Name="id_rapport" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_offrir__id_visiteur">
+    <End Role="visiteur" Type="Self.visiteur" Multiplicity="1" />
+    <End Role="offrir" Type="Self.offrir" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="visiteur">
+        <PropertyRef Name="id_visiteur" />
+      </Principal>
+      <Dependent Role="offrir">
+        <PropertyRef Name="id_visiteur" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_rapport_visite__id_praticien">
+    <End Role="praticien" Type="Self.praticien" Multiplicity="0..1" />
+    <End Role="rapport_visite" Type="Self.rapport_visite" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="praticien">
+        <PropertyRef Name="id_praticien" />
+      </Principal>
+      <Dependent Role="rapport_visite">
+        <PropertyRef Name="id_praticien" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_rapport_visite__id_visiteur">
+    <End Role="visiteur" Type="Self.visiteur" Multiplicity="1" />
+    <End Role="rapport_visite" Type="Self.rapport_visite" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="visiteur">
+        <PropertyRef Name="id_visiteur" />
+      </Principal>
+      <Dependent Role="rapport_visite">
+        <PropertyRef Name="id_visiteur" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="gsbModelStoreContainer">
+    <EntitySet Name="famille" EntityType="Self.famille" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="medicament" EntityType="Self.medicament" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="offrir" EntityType="Self.offrir" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="praticien" EntityType="Self.praticien" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="rapport_visite" EntityType="Self.rapport_visite" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="visiteur" EntityType="Self.visiteur" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_medicament__id_famille" Association="Self.FK_medicament__id_famille">
+      <End Role="famille" EntitySet="famille" />
+      <End Role="medicament" EntitySet="medicament" />
+    </AssociationSet>
+    <AssociationSet Name="FK_offrir__id_medicament" Association="Self.FK_offrir__id_medicament">
+      <End Role="medicament" EntitySet="medicament" />
+      <End Role="offrir" EntitySet="offrir" />
+    </AssociationSet>
+    <AssociationSet Name="FK_offrir__id_rapport" Association="Self.FK_offrir__id_rapport">
+      <End Role="rapport_visite" EntitySet="rapport_visite" />
+      <End Role="offrir" EntitySet="offrir" />
+    </AssociationSet>
+    <AssociationSet Name="FK_offrir__id_visiteur" Association="Self.FK_offrir__id_visiteur">
+      <End Role="visiteur" EntitySet="visiteur" />
+      <End Role="offrir" EntitySet="offrir" />
+    </AssociationSet>
+    <AssociationSet Name="FK_rapport_visite__id_praticien" Association="Self.FK_rapport_visite__id_praticien">
+      <End Role="praticien" EntitySet="praticien" />
+      <End Role="rapport_visite" EntitySet="rapport_visite" />
+    </AssociationSet>
+    <AssociationSet Name="FK_rapport_visite__id_visiteur" Association="Self.FK_rapport_visite__id_visiteur">
+      <End Role="visiteur" EntitySet="visiteur" />
+      <End Role="rapport_visite" EntitySet="rapport_visite" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
