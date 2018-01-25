@@ -1,2 +1,2 @@
 # GSB_DESKTOP
-version C# de l'épreuve E4 du BTS SIO
+Version C# de l'épreuve E4 du BTS SIO
